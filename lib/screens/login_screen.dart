@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_project4/screens/sign_up_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../constant/constant.dart';
@@ -20,9 +21,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  // TextEditingController : Un contrôleur pour un champ de texte modifiable.
   final _emailController = TextEditingController();
   final _parolController = TextEditingController();
 
+  // Un objet qui peut être utilisé par un widget à état pour obtenir le focus sur le clavier et pour gérer les événements clavier.
   late FocusNode password;
 
   bool isVisible = false;
@@ -67,6 +70,7 @@ class _LoginPageState extends State<LoginPage> {
                   await flushbar(context).show(context);
                 }
                 if (state is AuthLoginSuccess) {
+                  // Pousse la route donnée sur le navigateur, puis supprime toutes les routes précédentes jusqu'à ce que le prédicat renvoie vrai.
                   await Navigator.of(context).pushAndRemoveUntil(
                       _pageRouteBuilder(), (route) => false);
                 }
@@ -112,6 +116,13 @@ class _LoginPageState extends State<LoginPage> {
                                     ],
                                   ),
                                 ),
+                                ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                              builder: (context) => SignUp()));
+                                    },
+                                    child: Text('register'))
                               ],
                             ),
                           ),
