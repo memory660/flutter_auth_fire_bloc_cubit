@@ -22,8 +22,10 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   // TextEditingController : Un contrôleur pour un champ de texte modifiable.
-  final _emailController = TextEditingController();
-  final _parolController = TextEditingController();
+  final _emailController = TextEditingController(
+    text: 'poub440@gmail.com',
+  );
+  final _parolController = TextEditingController(text: '22222222');
 
   // Un objet qui peut être utilisé par un widget à état pour obtenir le focus sur le clavier et pour gérer les événements clavier.
   late FocusNode password;
@@ -224,6 +226,7 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField passwordFormField(BuildContext context) {
     return TextFormField(
+      // initialValue: '22222222',
       focusNode: password,
       controller: _parolController,
       decoration: InputDecoration(
