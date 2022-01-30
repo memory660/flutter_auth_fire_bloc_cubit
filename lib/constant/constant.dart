@@ -14,7 +14,8 @@ TextStyle textStyle(BuildContext context, Color color) {
 // button Style
 TextStyle googleStyle(
     {BuildContext? context, required Color color, required double fontSize}) {
-  return GoogleFonts.mochiyPopPOne().copyWith(color: color, fontSize: fontSize);
+  return GoogleFonts.mochiyPopPOne().copyWith(
+      color: color, fontSize: fontSize, fontWeight: FontWeight.normal);
 }
 
 RegExp regExp() {
@@ -25,30 +26,34 @@ RegExp regExp() {
 // Screen page
 String get screenTitle => 'Paltar magazam';
 String get screenSubtitle =>
-    'Magazada olan ve getirilen son\n mallardan xeberdar olun...';
+    'Soyez au courant des derniers produits en magasin et livrés...';
 // Login page
-String get pLoginTitle => 'login';
-String get pLoginSubtitle => 'Xos geldiniz';
+String get pLoginTitle => 'Connexion';
+String get pLoginSubtitle => 'Bienvenue';
+// register page
+String get pRegisterTitle => 'Inscription';
+String get loginBackTxt => 'retour à la connexion';
 // for SnackBar
 String get snackBarErrorText =>
     'La plupart de ces produits sont vendus à des prix très compétitifs...';
 String get snackBartitleText => 'Oops..!';
 // for Password
-String get passwordisEmpty => '**';
-String get hintTextForPass => '***********';
-String get labelTextForPass => 'pass';
+String get passwordisEmpty => '*';
+String get hintTextForPass => '';
+String get labelTextForPass => 'password';
 String get forgotPass => 'mot passe oublié ?';
-String get passworCorrect => 'mot passe correct';
+String get register => 'inscription';
+String get passwordIncorrect => 'mot passe incorrect';
 // for re-Enter password
-String get labelTextforReEnter => 'parolu təkrarlayın';
-String get rePasswordisEmpty => '***';
+String get labelTextforReEnter => 'confirmation';
+String get rePasswordisEmpty => '*';
 // for Email
-String get emailCorrect => 'format email correct';
+String get emailIncorrect => 'format email incorrect';
 String get emailisEmpty => '*';
-String get hintTextForEmail => 'gmail@example.com';
+String get hintTextForEmail => '';
 String get labelTextForEmail => 'email';
 // for Buttons
-String get login => 'login';
+String get loginTxt => 'se connecter';
 String get registration => 'enregistrer';
 //GIF
 String get gif => 'assets/img/shopping.gif';

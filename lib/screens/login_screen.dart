@@ -27,9 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // Un objet qui peut être utilisé par un widget à état pour obtenir le focus sur le clavier et pour gérer les événements clavier.
   late FocusNode password;
-
   bool isVisible = false;
-
   User? user;
 
   @override
@@ -58,92 +56,90 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: kBackgroundColor,
-      body: FutureBuilder(
-        future: _initializeFirebase(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return BlocConsumer<AuthCubit, AuthState>(
-              listener: (context, state) async {
-                if (state is AuthLoginError) {
-                  await flushbar(context).show(context);
-                }
-                if (state is AuthLoginSuccess) {
-                  // Pousse la route donnée sur le navigateur, puis supprime toutes les routes précédentes jusqu'à ce que le prédicat renvoie vrai.
-                  await Navigator.of(context).pushAndRemoveUntil(
-                      _pageRouteBuilder(), (route) => false);
-                }
-                return;
-              },
-              builder: (context, state) {
-                return Stack(
-                  children: [
-                    Positioned(
-                      top: 0,
-                      child: clipPath(context),
-                    ),
-                    Positioned(
-                      bottom: 0,
-                      child: Container(
-                        width: constantSize(context).width,
-                        height: constantSize(context).height * .8,
-                        color: const Color(0x00CBD7E9),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                          child: SingleChildScrollView(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 20),
-                                loginPageTitle(),
-                                const SizedBox(height: 20),
-                                loginPageSubtitle(),
-                                const SizedBox(height: 60),
-                                Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    children: [
-                                      emailFormField(context),
-                                      const SizedBox(height: 20),
-                                      passwordFormField(context),
-                                      Align(
-                                        heightFactor: 2.0,
-                                        alignment: const Alignment(.95, 0),
-                                        child: forgotPassword(),
-                                      )
-                                    ],
-                                  ),
+        backgroundColor: kBackgroundColor,
+        body: FutureBuilder(
+            future: _initializeFirebase(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) async {
+                    if (state is AuthLoginError) {
+                      await flushbar(context).show(context);
+                    }
+                    if (state is AuthLoginSuccess) {
+                      // Pousse la route donnée sur le navigateur, puis supprime toutes les routes précédentes jusqu'à ce que le prédicat renvoie vrai.
+                      await Navigator.of(context).pushAndRemoveUntil(
+                          _pageRouteBuilder(), (route) => false);
+                    }
+
+                    return;
+                  },
+                  builder: (context, state) {
+                    return Stack(
+                      children: [
+                        Positioned(
+                          top: 0,
+                          child: clipPath(context),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          child: Container(
+                            width: constantSize(context).width,
+                            height: constantSize(context).height * .8,
+                            color: const Color(0x00CBD7E9),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15.0),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 20),
+                                    loginPageTitle(),
+                                    const SizedBox(height: 20),
+                                    loginPageSubtitle(),
+                                    const SizedBox(height: 60),
+                                    Form(
+                                      key: _formKey,
+                                      child: Column(
+                                        children: [
+                                          emailFormField(context),
+                                          const SizedBox(height: 20),
+                                          passwordFormField(context),
+                                          Align(
+                                            heightFactor: 2.0,
+                                            alignment: const Alignment(.95, 0),
+                                            child: forgotPassword(),
+                                          ),
+                                          Align(
+                                            heightFactor: 2.0,
+                                            alignment: const Alignment(.95, 0),
+                                            child: inscription(),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => SignUp()));
-                                    },
-                                    child: Text('register'))
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ),
-                    Positioned(
-                      left: 15,
-                      right: 15,
-                      bottom: 20,
-                      child: loginButton(context),
-                    )
-                  ],
+                        Positioned(
+                          left: 15,
+                          right: 15,
+                          bottom: 20,
+                          child: loginButton(context),
+                        )
+                      ],
+                    );
+                  },
                 );
-              },
-            );
-          }
-          return const SizedBox.shrink();
-        },
-      ),
-    );
+              }
+              return const SizedBox.shrink();
+            }));
   }
 
   PageRouteBuilder<dynamic> _pageRouteBuilder() {
@@ -210,7 +206,6 @@ class _LoginPageState extends State<LoginPage> {
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: kFieldBorderColor, width: 2),
         ),
-        hintText: hintTextForEmail,
         hintStyle: textStyle(context, kTitleColor),
         labelStyle: textStyle(context, ksubtitleColor),
       ),
@@ -221,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
         if (email!.isEmpty) {
           return emailisEmpty;
         } else if (!regExp().hasMatch(email)) {
-          return emailCorrect;
+          return emailIncorrect;
         }
       },
     );
@@ -239,7 +234,6 @@ class _LoginPageState extends State<LoginPage> {
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: kFieldBorderColor, width: 2),
         ),
-        hintText: hintTextForPass,
         hintStyle: textStyle(context, kTitleColor),
         labelStyle: textStyle(context, ksubtitleColor),
         suffixIcon: GestureDetector(
@@ -257,16 +251,33 @@ class _LoginPageState extends State<LoginPage> {
         if (password!.isEmpty) {
           return passwordisEmpty;
         } else if (password.length < 8) {
-          return passworCorrect;
+          return passwordIncorrect;
         }
       },
     );
   }
 
-  Text forgotPassword() {
-    return Text(
-      forgotPass,
-      style: googleStyle(color: kFieldBorderColor, fontSize: 13),
+  TextButton forgotPassword() {
+    return TextButton(
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => forgotPassword()));
+      },
+      child: Text(forgotPass),
+      style: TextButton.styleFrom(
+          textStyle: googleStyle(color: kFieldBorderColor, fontSize: 13)),
+    );
+  }
+
+  TextButton inscription() {
+    return TextButton(
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => SignUp()));
+      },
+      child: Text(register),
+      style: TextButton.styleFrom(
+          textStyle: googleStyle(color: kFieldBorderColor, fontSize: 13)),
     );
   }
 
@@ -287,7 +298,7 @@ class _LoginPageState extends State<LoginPage> {
             return SpinKitCircle(color: kTitleColor);
           } else {
             return Text(
-              login,
+              loginTxt,
               style: googleStyle(color: kTitleColor, fontSize: 18),
             );
           }

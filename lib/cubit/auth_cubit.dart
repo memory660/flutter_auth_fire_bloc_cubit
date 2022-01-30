@@ -3,22 +3,23 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_project4/repositories/user_repository.dart';
 
 part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthDefault());
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final UserRepository _userRepository = UserRepository();
 
   // Login
   Future<User?> login(String email, String password) async {
     emit(const AuthLoginLoading());
     User? user;
     try {
-      UserCredential userCredential = await _firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential =
+          await _userRepository.login(email, password);
       user = userCredential.user;
-      //user = _firebaseAuth.currentUser;
       if (user != null) {
         emit(AuthLoginSuccess(user: user));
       }
@@ -33,10 +34,9 @@ class AuthCubit extends Cubit<AuthState> {
     User? user;
     emit(const AuthSignUpLoading());
     try {
-      UserCredential userCredential = await _firebaseAuth
-          .createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential userCredential =
+          await _userRepository.register(email, password);
       user = userCredential.user;
-      user = _firebaseAuth.currentUser;
       if (user != null) {
         emit(const AuthSignUpSuccess());
       }
@@ -62,7 +62,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   // Logout
   Future logout() async {
-    await _firebaseAuth.signOut();
+    await _userRepository.logout();
     emit(const AuthLogout());
   }
 }

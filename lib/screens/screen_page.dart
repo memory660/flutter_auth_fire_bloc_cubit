@@ -73,7 +73,7 @@ class _ScreenPageState extends State<ScreenPage> {
                   );
                 },
                 title: Text(
-                  login,
+                  loginTxt,
                   style: googleStyle(color: kTitleColor, fontSize: 22),
                 ),
                 titleColor: kTitleColor,

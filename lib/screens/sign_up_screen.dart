@@ -104,9 +104,7 @@ class _SignUpState extends State<SignUp> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 20),
-                          loginPageTitle(),
-                          const SizedBox(height: 20),
-                          loginPageSubtitle(),
+                          registerPageTitle(),
                           const SizedBox(height: 30),
                           Form(
                             key: _formKey,
@@ -120,6 +118,11 @@ class _SignUpState extends State<SignUp> {
                               ],
                             ),
                           ),
+                          Align(
+                            heightFactor: 2.0,
+                            alignment: const Alignment(.95, 0),
+                            child: loginButton(),
+                          )
                         ],
                       ),
                     ),
@@ -130,7 +133,7 @@ class _SignUpState extends State<SignUp> {
                 left: 15,
                 right: 15,
                 bottom: 20,
-                child: loginButton(context),
+                child: registerButton(context),
               )
             ],
           );
@@ -154,7 +157,7 @@ class _SignUpState extends State<SignUp> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
-              "Qeydiyyatdan keçdiniz 🥳",
+              "Vous êtes inscrit 🥳",
               softWrap: true,
               style: TextStyle(fontSize: 18),
             ),
@@ -179,9 +182,9 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  Text loginPageTitle() {
+  Text registerPageTitle() {
     return Text(
-      pLoginTitle,
+      pRegisterTitle,
       style: googleStyle(color: Colors.yellow, fontSize: 20),
     );
   }
@@ -226,7 +229,7 @@ class _SignUpState extends State<SignUp> {
         if (email!.isEmpty) {
           return emailisEmpty;
         } else if (!regExp().hasMatch(email)) {
-          return emailCorrect;
+          return emailIncorrect;
         }
       },
     );
@@ -257,7 +260,7 @@ class _SignUpState extends State<SignUp> {
         if (password!.isEmpty) {
           return passwordisEmpty;
         } else if (password.length < 8) {
-          return passworCorrect;
+          return passwordIncorrect;
         }
         return null;
       },
@@ -289,16 +292,16 @@ class _SignUpState extends State<SignUp> {
         if (rePassword!.isEmpty) {
           return rePasswordisEmpty;
         } else if (rePassword.length < 8) {
-          return passworCorrect;
+          return passwordIncorrect;
         } else if (confirmPass) {
-          return 'parollar uyusmur';
+          return 'Les mots de passe ne correspondent pas';
         }
         return null;
       },
     );
   }
 
-  AnimePressButton loginButton(BuildContext context) {
+  AnimePressButton registerButton(BuildContext context) {
     return AnimePressButton(
       borderRadius: BorderRadius.circular(100),
       onTap: () async {
@@ -314,7 +317,7 @@ class _SignUpState extends State<SignUp> {
             return SpinKitCircle(color: kTitleColor);
           } else {
             return Text(
-              login,
+              register,
               style: googleStyle(color: kTitleColor, fontSize: 18),
             );
           }
@@ -322,6 +325,18 @@ class _SignUpState extends State<SignUp> {
       ),
       titleColor: kTitleColor,
       width: constantSize(context).width * .9,
+    );
+  }
+
+  TextButton loginButton() {
+    return TextButton(
+      onPressed: () {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => const LoginPage()));
+      },
+      child: Text(loginBackTxt),
+      style: TextButton.styleFrom(
+          textStyle: googleStyle(color: kFieldBorderColor, fontSize: 13)),
     );
   }
 
