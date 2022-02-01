@@ -44,104 +44,84 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-    user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => HomePage(user: user!)),
-          (route) => false);
-    }
-    return firebaseApp;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: kBackgroundColor,
-        body: FutureBuilder(
-            future: _initializeFirebase(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return BlocConsumer<AuthCubit, AuthState>(
-                  listener: (context, state) async {
-                    if (state is AuthLoginError) {
-                      await flushbar(context).show(context);
-                    }
-                    if (state is AuthLoginSuccess) {
-                      // Pousse la route donnée sur le navigateur, puis supprime toutes les routes précédentes jusqu'à ce que le prédicat renvoie vrai.
-                      await Navigator.of(context).pushAndRemoveUntil(
-                          _pageRouteBuilder(), (route) => false);
-                    }
+        body: BlocConsumer<AuthCubit, AuthState>(
+          listener: (context, state) async {
+            if (state is AuthLoginError) {
+              await flushbar(context).show(context);
+            }
+            if (state is AuthLoginSuccess) {
+              // Pousse la route donnée sur le navigateur, puis supprime toutes les routes précédentes jusqu'à ce que le prédicat renvoie vrai.
+              await Navigator.of(context)
+                  .pushAndRemoveUntil(_pageRouteBuilder(), (route) => false);
+            }
 
-                    return;
-                  },
-                  builder: (context, state) {
-                    return Stack(
-                      children: [
-                        Positioned(
-                          top: 0,
-                          child: clipPath(context),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          child: Container(
-                            width: constantSize(context).width,
-                            height: constantSize(context).height * .8,
-                            color: const Color(0x00CBD7E9),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 15.0),
-                              child: SingleChildScrollView(
-                                child: Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 20),
-                                    loginPageTitle(),
-                                    const SizedBox(height: 20),
-                                    loginPageSubtitle(),
-                                    const SizedBox(height: 60),
-                                    Form(
-                                      key: _formKey,
-                                      child: Column(
-                                        children: [
-                                          emailFormField(context),
-                                          const SizedBox(height: 20),
-                                          passwordFormField(context),
-                                          Align(
-                                            heightFactor: 2.0,
-                                            alignment: const Alignment(.95, 0),
-                                            child: forgotPassword(),
-                                          ),
-                                          Align(
-                                            heightFactor: 2.0,
-                                            alignment: const Alignment(.95, 0),
-                                            child: inscription(),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+            return;
+          },
+          builder: (context, state) {
+            return Stack(
+              children: [
+                Positioned(
+                  top: 0,
+                  child: clipPath(context),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    width: constantSize(context).width,
+                    height: constantSize(context).height * .8,
+                    color: const Color(0x00CBD7E9),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 20),
+                            loginPageTitle(),
+                            const SizedBox(height: 20),
+                            loginPageSubtitle(),
+                            const SizedBox(height: 60),
+                            Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  emailFormField(context),
+                                  const SizedBox(height: 20),
+                                  passwordFormField(context),
+                                  Align(
+                                    heightFactor: 2.0,
+                                    alignment: const Alignment(.95, 0),
+                                    child: forgotPassword(),
+                                  ),
+                                  Align(
+                                    heightFactor: 2.0,
+                                    alignment: const Alignment(.95, 0),
+                                    child: inscription(),
+                                  )
+                                ],
                               ),
                             ),
-                          ),
+                          ],
                         ),
-                        Positioned(
-                          left: 15,
-                          right: 15,
-                          bottom: 20,
-                          child: loginButton(context),
-                        )
-                      ],
-                    );
-                  },
-                );
-              }
-              return const SizedBox.shrink();
-            }));
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  left: 15,
+                  right: 15,
+                  bottom: 20,
+                  child: loginButton(context),
+                )
+              ],
+            );
+          },
+        ));
   }
 
   PageRouteBuilder<dynamic> _pageRouteBuilder() {

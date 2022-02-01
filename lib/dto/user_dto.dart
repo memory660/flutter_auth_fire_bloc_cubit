@@ -1,12 +1,12 @@
 class UserDto {
-  final String id;
+  final String? id;
   final String title;
   final String firstName;
   final String lastName;
   final String picture;
 
   UserDto(
-      {required this.id,
+      {this.id,
       required this.title,
       required this.firstName,
       required this.lastName,
