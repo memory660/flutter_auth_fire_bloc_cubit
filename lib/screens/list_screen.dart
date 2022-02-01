@@ -9,15 +9,15 @@ import '../cubit/auth_cubit.dart';
 import 'screen_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HomePage extends StatefulWidget {
+class ListScreen extends StatefulWidget {
   final User user;
-  const HomePage({Key? key, required this.user}) : super(key: key);
+  const ListScreen({Key? key, required this.user}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ListScreenState createState() => _ListScreenState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ListScreenState extends State<ListScreen> {
   late User currentUser;
   final UserDatabase userDatabase = UserDatabase();
 
@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                         return Dismissible(
                           background: Container(color: Colors.red),
                           key: ValueKey<Object>(snapshot.data!.docs[index]),
-                          child: UserItemWidget(data),
+                          child: UserItemWidget(data, index),
                           onDismissed: (direction) {
                             setState(() {
                               userDatabase.remove(data["id"]);
@@ -64,8 +64,9 @@ class _HomePageState extends State<HomePage> {
 }
 
 class UserItemWidget extends StatelessWidget {
-  const UserItemWidget(this.user) : super();
+  const UserItemWidget(this.user, this.index) : super();
   final DocumentSnapshot user;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +82,7 @@ class UserItemWidget extends StatelessWidget {
         margin: EdgeInsets.all(8),
         elevation: 8,
         child: Row(
-          children: [userItemSection1(), userItemSection2()],
+          children: [userItemSection1(), userItemSection2(index + 1)],
         ),
       ),
     );
@@ -115,7 +116,7 @@ class UserItemWidget extends StatelessWidget {
     );
   }
 
-  Padding userItemSection2() {
+  Padding userItemSection2(index) {
     return Padding(
       padding: EdgeInsets.all(8),
       child: Column(
@@ -123,7 +124,7 @@ class UserItemWidget extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.only(bottom: 8),
-            child: Text('profil',
+            child: Text('profil ' + index.toString(),
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
           ),
           Text(user['title'] + " " + user['firstName'] + " " + user['lastName'],

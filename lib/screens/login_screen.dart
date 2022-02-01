@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_project4/screens/list_screen.dart';
 import 'package:flutter_project4/screens/sign_up_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -10,7 +11,6 @@ import '../constant/constant.dart';
 import '../cubit/auth_cubit.dart';
 import '../ui/animation_button.dart';
 import '../ui/myclipper.dart';
-import 'home_screen.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
     return PageRouteBuilder(
       opaque: true,
       pageBuilder: (BuildContext context, _, __) {
-        return HomePage(user: user!);
+        return ListScreen(user: user!);
       },
       transitionDuration: const Duration(milliseconds: 700),
       reverseTransitionDuration: const Duration(milliseconds: 700),
