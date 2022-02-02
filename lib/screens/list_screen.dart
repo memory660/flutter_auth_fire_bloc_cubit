@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project4/database/user_database.dart';
+import 'package:flutter_project4/screens/edit_screen.dart';
+import 'package:flutter_project4/screens/widgets/common.dart';
 import 'package:image_network/image_network.dart';
 import 'package:flutter_project4/dto/user_dto.dart';
 import '../cubit/auth_cubit.dart';
@@ -10,8 +12,7 @@ import 'screen_page.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ListScreen extends StatefulWidget {
-  final User user;
-  const ListScreen({Key? key, required this.user}) : super(key: key);
+  const ListScreen({Key? key}) : super(key: key);
 
   @override
   _ListScreenState createState() => _ListScreenState();
@@ -23,7 +24,8 @@ class _ListScreenState extends State<ListScreen> {
 
   @override
   void initState() {
-    currentUser = widget.user;
+    final authCubit = BlocProvider.of<AuthCubit>(context);
+    currentUser = authCubit.state.user!;
     super.initState();
   }
 
@@ -48,7 +50,7 @@ class _ListScreenState extends State<ListScreen> {
 
                         return Dismissible(
                           background: Container(color: Colors.red),
-                          key: ValueKey<Object>(snapshot.data!.docs[index]),
+                          key: ValueKey<Object>(data),
                           child: UserItemWidget(data, index),
                           onDismissed: (direction) {
                             setState(() {
@@ -71,66 +73,12 @@ class UserItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          '/user',
-          arguments: user,
-        );
-      },
-      child: Card(
-        margin: EdgeInsets.all(8),
-        elevation: 8,
-        child: Row(
-          children: [userItemSection1(), userItemSection2(index + 1)],
-        ),
-      ),
-    );
-  }
-
-  Padding userItemSection1() {
-    return Padding(
-      padding: EdgeInsets.all(16.0),
-      child: ImageNetwork(
-        image: user['picture'],
-        imageCache: CachedNetworkImageProvider(user['picture']),
-        height: 50,
-        width: 50,
-        duration: 1500,
-        curve: Curves.easeIn,
-        onPointer: true,
-        fitAndroidIos: BoxFit.cover,
-        fitWeb: BoxFitWeb.cover,
-        borderRadius: BorderRadius.circular(70),
-        onLoading: const CircularProgressIndicator(
-          color: Colors.indigoAccent,
-        ),
-        onError: const Icon(
-          Icons.error,
-          color: Colors.red,
-        ),
         onTap: () {
-          debugPrint("©gabriel_patrick_souza");
+          print(user);
+          print(index);
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => EditScreen(user: user, index: index)));
         },
-      ),
-    );
-  }
-
-  Padding userItemSection2(index) {
-    return Padding(
-      padding: EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text('profil ' + index.toString(),
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-          ),
-          Text(user['title'] + " " + user['firstName'] + " " + user['lastName'],
-              style: TextStyle(color: Colors.grey[500], fontSize: 16))
-        ],
-      ),
-    );
+        child: userItemCard(user, index));
   }
 }

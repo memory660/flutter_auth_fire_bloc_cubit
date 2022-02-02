@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
     return PageRouteBuilder(
       opaque: true,
       pageBuilder: (BuildContext context, _, __) {
-        return ListScreen(user: user!);
+        return const ListScreen();
       },
       transitionDuration: const Duration(milliseconds: 700),
       reverseTransitionDuration: const Duration(milliseconds: 700),
@@ -206,7 +206,6 @@ class _LoginPageState extends State<LoginPage> {
 
   TextFormField passwordFormField(BuildContext context) {
     return TextFormField(
-      // initialValue: '22222222',
       focusNode: password,
       controller: _parolController,
       decoration: InputDecoration(
@@ -256,7 +255,7 @@ class _LoginPageState extends State<LoginPage> {
     return TextButton(
       onPressed: () {
         Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => SignUp()));
+            .push(MaterialPageRoute(builder: (context) => const SignUp()));
       },
       child: Text(register),
       style: TextButton.styleFrom(

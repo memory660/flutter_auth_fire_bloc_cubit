@@ -65,6 +65,20 @@ Color get ksubtitleColor => const Color(0xFFDBDBDB);
 Color get kFieldBorderColor => const Color(0xFF7091C5);
 Color get kSnackBarColor => const Color(0xFF750A0A);
 Color get verifyColor => const Color(0xFF278A34);
+// Edit
+String get titleEmpty => 'Le titre est obligatoire';
+String get titleIncorrect => 'Le titre doit avoir 2 caractères minimum';
+String get firstNameEmpty => 'Le nom est obligatoire';
+String get firstNameIncorrect => 'Le nom doit avoir plus de 2 caractères';
+String get lastNameEmpty => 'Le prénom est obligatoire';
+String get lastNameIncorrect => 'Le prénom doit avoir plus de 2 caractères';
+String get titleLabel => 'titre';
+String get firstNameLabel => 'nom';
+String get lastNameLabel => 'prénom';
+String get editValidLabel => 'VALIDER';
+String get editCancelLabel => 'ANNULER';
+Color get kfieldColor => const Color(0xFF222222);
+Color get kLabelColor => const Color(0xFF444444);
 
 class AppRoutes {
   static const screen = '/screen';
