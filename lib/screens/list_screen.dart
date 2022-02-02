@@ -5,11 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project4/database/user_database.dart';
 import 'package:flutter_project4/screens/edit_screen.dart';
 import 'package:flutter_project4/screens/widgets/common.dart';
-import 'package:image_network/image_network.dart';
-import 'package:flutter_project4/dto/user_dto.dart';
 import '../cubit/auth_cubit.dart';
-import 'screen_page.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ListScreen extends StatefulWidget {
   const ListScreen({Key? key}) : super(key: key);
@@ -39,11 +35,11 @@ class _ListScreenState extends State<ListScreen> {
                 stream: userDatabase.readData(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                   return ListView.builder(
                       shrinkWrap: true,
-                      physics: ScrollPhysics(),
+                      physics: const ScrollPhysics(),
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
                         DocumentSnapshot data = snapshot.data!.docs[index];
@@ -57,7 +53,7 @@ class _ListScreenState extends State<ListScreen> {
                               userDatabase.remove(data["id"]);
                             });
                             ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text(" supprimé")));
+                                const SnackBar(content: Text(" supprimé")));
                           },
                         );
                       });
@@ -74,8 +70,6 @@ class UserItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          print(user);
-          print(index);
           Navigator.of(context).push(MaterialPageRoute(
               builder: (context) => EditScreen(user: user, index: index)));
         },

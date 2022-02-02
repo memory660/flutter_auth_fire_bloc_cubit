@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../constant/constant.dart';
 import '../ui/animation_button.dart';
 import '../ui/myclipper.dart';

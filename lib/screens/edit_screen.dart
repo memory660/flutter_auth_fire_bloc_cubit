@@ -52,7 +52,7 @@ class _EditScreenState extends State<EditScreen> {
                 stream: userDatabase.readData(),
                 builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
+                    return const Center(child: CircularProgressIndicator());
                   }
                   return Form(
                       key: _formKey,
@@ -64,21 +64,21 @@ class _EditScreenState extends State<EditScreen> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Container(
+                              SizedBox(
                                 width: 200,
                                 child: titleFormField(context),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 200,
                                 child: firstNameFormField(context),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 20,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 200,
                                 child: lastNameFormField(context),
                               ),
@@ -148,7 +148,7 @@ class _EditScreenState extends State<EditScreen> {
       validator: (firstName) {
         if (firstName!.isEmpty) {
           return titleEmpty;
-        } else if (firstName.length < 1) {
+        } else if (firstName.length < 2) {
           return titleIncorrect;
         }
       },
@@ -186,9 +186,7 @@ class _EditScreenState extends State<EditScreen> {
   ElevatedButton loginButton(BuildContext context, DocumentSnapshot user) {
     return ElevatedButton(
         onPressed: () {
-          print(_formKey.currentState!);
           if (_formKey.currentState!.validate()) {
-            print('1111111111111');
             UserDto userDto = UserDto(
                 id: user["id"].trim(),
                 title: _titleController.text.trim(),
@@ -196,11 +194,10 @@ class _EditScreenState extends State<EditScreen> {
                 lastName: _lastNameController.text.trim(),
                 picture: user["picture"].trim());
             userDatabase.update(userDto);
-            print('2222222222222');
+
             Navigator.of(context)
                 .push(MaterialPageRoute(builder: (context) => ListScreen()));
           } else {
-            print('xxxxxxxxxxxxxxxxxxxxxxxxx');
             return;
           }
         },

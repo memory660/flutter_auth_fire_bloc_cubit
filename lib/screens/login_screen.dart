@@ -1,12 +1,10 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project4/screens/list_screen.dart';
 import 'package:flutter_project4/screens/sign_up_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
 import '../constant/constant.dart';
 import '../cubit/auth_cubit.dart';
 import '../ui/animation_button.dart';
