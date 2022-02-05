@@ -24,7 +24,7 @@ Padding userItemSection1(user) {
         color: Colors.red,
       ),
       onTap: () {
-        debugPrint("©gabriel_patrick_souza");
+        debugPrint(user['email']);
       },
     ),
   );
