@@ -82,12 +82,9 @@ class MapSample2ScreenState extends State<MapSample2Screen> {
 
   // --------------------------------------------
   getPlaceAddressDetails(String placeID) async {
-    print("0000000000");
     final String placeAddressDetailsUrl =
         "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$API_KEY";
-    print("0000000000");
     final result = await ApiService.getRequest(placeAddressDetailsUrl);
-    print("0000000000");
     final location = result["result"]["geometry"]["location"];
     final ProjectMapModel selectedPlace = ProjectMapModel(
         placeID, location["lat"], location["lng"], result["result"]["name"]);
@@ -112,15 +109,10 @@ class MapSample2ScreenState extends State<MapSample2Screen> {
   }
 
   findPlace(String inputPlace) async {
-    print(inputPlace);
     if (inputPlace.length > 1) {
-      print("33333333");
       final String autoCompleteUrl =
           "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputPlace&key=$API_KEY&sessiontoken=1234567890&components=country:fr";
-      print(autoCompleteUrl);
       final result = await ApiService.getRequest(autoCompleteUrl);
-      print("444444444444");
-      print(result);
       listenablePlaceModels.value = (result["predictions"] as List)
           .map((e) => PlaceModel.fromJson(e))
           .toList();
