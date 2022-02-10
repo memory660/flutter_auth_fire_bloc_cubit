@@ -23,5 +23,8 @@ class MarkersAdd extends MarkersEvent {
 class MarkersDelete extends MarkersEvent {
   MarkersDelete({required this.markerId});
 
-  final int markerId;
+  final MarkerId markerId;
+
+  @override
+  List<Object?> get props => [markerId];
 }

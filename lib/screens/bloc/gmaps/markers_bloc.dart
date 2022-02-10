@@ -48,9 +48,6 @@ class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
 
     List<Marker> newList = List.from(state.markers)..add(marker);
 
-    print('newList');
-    print(newList);
-
     emit(
       state.copyWith(
         status: MarkersStatus.success,
@@ -85,10 +82,8 @@ class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
     Emitter<MarkersState> emit,
   ) async {
     emit(state.copyWith(status: MarkersStatus.loading));
-    // remove item from the list
     state.markers.removeAt(
         state.markers.indexWhere((Marker p) => p.markerId == event.markerId));
-
     emit(
       state.copyWith(
         status: MarkersStatus.success,

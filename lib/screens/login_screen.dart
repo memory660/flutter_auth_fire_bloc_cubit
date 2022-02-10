@@ -3,8 +3,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project4/screens/list_screen.dart';
-import 'package:flutter_project4/screens/map_sample2_screen.dart';
-import 'package:flutter_project4/screens/map_sample3_screen.dart';
+import 'package:flutter_project4/screens/map_sample_changenotifier_screen.dart';
+
+import 'package:flutter_project4/screens/map_sample_bloc_screen.dart';
 import 'package:flutter_project4/screens/map_sample_screen.dart';
 import 'package:flutter_project4/screens/sign_up_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -51,18 +52,19 @@ class _LoginPageState extends State<LoginPage> {
         appBar: AppBar(
           title: const Text('Home'),
           actions: [
-            PopupMenuButton(
-                // add icon, by default "3 dot" icon
-                // icon: Icon(Icons.book)
-                itemBuilder: (context) {
+            PopupMenuButton(itemBuilder: (context) {
               return [
-                PopupMenuItem<int>(
+                const PopupMenuItem<int>(
                   value: 0,
                   child: Text("carte 1"),
                 ),
-                PopupMenuItem<int>(
+                const PopupMenuItem<int>(
                   value: 1,
-                  child: Text("carte 2"),
+                  child: Text("carte 2 - bloc"),
+                ),
+                const PopupMenuItem<int>(
+                  value: 2,
+                  child: Text("carte 3 - ChangeNotifier"),
                 ),
               ];
             }, onSelected: (value) {
@@ -71,7 +73,11 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => MapSampleScreen()));
               } else if (value == 1) {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MapSample3Screen()));
+                    builder: (context) => const MapSampleBlocScreen()));
+              } else if (value == 2) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>
+                        const MapSampleChangeNotifierScreen()));
               } else if (value == 2) {
                 print("Logout menu is selected.");
               }

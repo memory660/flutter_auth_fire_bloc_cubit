@@ -13,16 +13,18 @@ import 'package:provider/provider.dart';
 
 enum LocationStatus { SEARCHING, FOUND, ERROR }
 
-class MapSample2Screen extends StatefulWidget {
-  const MapSample2Screen({
+class MapSampleChangeNotifierScreen extends StatefulWidget {
+  const MapSampleChangeNotifierScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<MapSample2Screen> createState() => MapSample2ScreenState();
+  State<MapSampleChangeNotifierScreen> createState() =>
+      MapSampleChangeNotifierScreenState();
 }
 
-class MapSample2ScreenState extends State<MapSample2Screen> {
+class MapSampleChangeNotifierScreenState
+    extends State<MapSampleChangeNotifierScreen> {
   Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _kLake = CameraPosition(

@@ -17,16 +17,16 @@ import 'package:provider/provider.dart';
 
 enum LocationStatus { SEARCHING, FOUND, ERROR }
 
-class MapSample3Screen extends StatefulWidget {
-  const MapSample3Screen({
+class MapSampleBlocScreen extends StatefulWidget {
+  const MapSampleBlocScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<MapSample3Screen> createState() => MapSample3ScreenState();
+  State<MapSampleBlocScreen> createState() => MapSampleBlocScreenState();
 }
 
-class MapSample3ScreenState extends State<MapSample3Screen> {
+class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   Completer<GoogleMapController> _controller = Completer();
 
   static final CameraPosition _kLake = CameraPosition(
@@ -80,9 +80,14 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
                         );
                       },
                     ),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     googleMapSection(),
-                    //markersSection(),
-                    markersSectionBloc2(state)
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    markersSectionBloc(context, state)
                   ],
                 );
               })),
@@ -95,7 +100,7 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
   }
 
   // --------------------------------------------
-  getPlaceAddressDetails(con, String placeID) async {
+  getPlaceAddressDetails(ctx, String placeID) async {
     final String placeAddressDetailsUrl =
         "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$API_KEY";
     final result = await ApiService.getRequest(placeAddressDetailsUrl);
@@ -109,15 +114,10 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
 
     Marker marker = Marker(
         markerId: MarkerId(selectedPlace.placeID),
-        position: selectedPlace.latLong);
+        position: selectedPlace.latLong,
+        infoWindow: InfoWindow(title: selectedPlace.name));
 
-    BlocProvider.of<MarkersBloc>(con).add(MarkersAdd(marker: marker));
-
-/*
-    context
-        .read<MarkersBloc>()
-        .add(MarkersAdd(marker: selectedPlace as Marker));
-        */
+    BlocProvider.of<MarkersBloc>(ctx).add(MarkersAdd(marker: marker));
   }
 
   void animateCameraNewLatLng(ProjectMapModel work) {
@@ -126,12 +126,12 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
 
   addMarker(ProjectMapModel place) {
     markerModel = Provider.of<GoogleMapsModel>(context, listen: false);
-    //if (null != markerId) markerModel.deleteMarker(markerId!);
     markerId = markerModel.addMarker(place);
   }
 
-  removeMarker(Marker marker) {
-    markerModel.deleteMarker(marker.markerId);
+  removeMarker(ctx, Marker marker) {
+    BlocProvider.of<MarkersBloc>(ctx)
+        .add(MarkersDelete(markerId: marker.markerId));
   }
 
   findPlace(String inputPlace) async {
@@ -148,7 +148,7 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
     }
   }
 
-  Builder autocompleteSearchsection(con, predictionsList) {
+  Builder autocompleteSearchsection(ctx, predictionsList) {
     return Builder(
         builder: (context) => Container(
               decoration: BoxDecoration(
@@ -162,7 +162,7 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
                   return ListTile(
                     onTap: () {
                       getPlaceAddressDetails(
-                          con, predictionsList[index].placeID);
+                          ctx, predictionsList[index].placeID);
                       setState(() {
                         addressVisibility = false;
                       });
@@ -218,82 +218,31 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
     );
   }
 
-  Container markersSectionBloc() {
-    return Container(
-        height: 300,
-        width: 600,
-        child:
-            BlocBuilder<MarkersBloc, MarkersState>(builder: (context, state) {
-          // return widget here based on BlocA's state
-          return Container(
-              height: 100,
-              child: Center(
-                child: Card(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      ListView.builder(
-                          itemCount: state.markers.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final list = state.markers.toList(growable: true);
-                            return Container(
-                                height: 100,
-                                child: Center(
-                                    child: Dismissible(
-                                  background: Container(color: Colors.red),
-                                  key: ValueKey<Object>(list),
-                                  onDismissed: (direction) {
-                                    removeMarker(list[index]);
-                                  },
-                                  child: Card(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        ListTile(
-                                          leading: const Icon(Icons.album),
-                                          title: Text(list[index]
-                                              .infoWindow
-                                              .title
-                                              .toString()),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )));
-                          })
-                    ],
-                  ),
-                ),
-              ));
-        }));
-  }
-
-  Column markersSectionBloc2(state) {
+  Column markersSectionBloc(ctx, state) {
     return Column(
       children: [
-        // return widget here based on BlocA's state
         Container(
+          margin:
+              const EdgeInsets.only(top: 10, bottom: 10, left: 80, right: 80),
           child: Center(
-            child: Card(
-                child: Column(
+            child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Container(
-                    height: 100,
-                    width: 300,
+                    width: MediaQuery.of(ctx).size.width,
+                    height: MediaQuery.of(ctx).size.height,
                     child: ListView.builder(
                         itemCount: state.markers.length,
                         itemBuilder: (BuildContext context, int index) {
                           final list = state.markers.toList(growable: true);
-                          print("list - nb=" + list.length.toString());
-                          print(list);
+
                           return Container(
                               child: Center(
                                   child: Dismissible(
                                       background: Container(color: Colors.red),
                                       key: ValueKey<Object>(list),
                                       onDismissed: (direction) {
-                                        removeMarker(list[index]);
+                                        removeMarker(ctx, list[index]);
                                       },
                                       child: GestureDetector(
                                         onTap: () {
@@ -309,12 +258,6 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
                                           destinationController.text =
                                               selectedPlace.name;
                                           animateCameraNewLatLng(selectedPlace);
-
-                                          context.read<MarkersBloc>().add(
-                                              MarkersAdd(
-                                                  marker:
-                                                      selectedPlace as Marker));
-                                          //addMarker(selectedPlace);
                                         },
                                         child: Card(
                                           child: Column(
@@ -349,7 +292,7 @@ class MapSample3ScreenState extends State<MapSample3Screen> {
                                       ))));
                         }))
               ],
-            )),
+            ),
           ),
         )
       ],
