@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project4/screens/list_screen.dart';
 import 'package:flutter_project4/screens/map_sample2_screen.dart';
+import 'package:flutter_project4/screens/map_sample3_screen.dart';
 import 'package:flutter_project4/screens/map_sample_screen.dart';
 import 'package:flutter_project4/screens/sign_up_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (context) => MapSampleScreen()));
               } else if (value == 1) {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => MapSample2Screen()));
+                    builder: (context) => MapSample3Screen()));
               } else if (value == 2) {
                 print("Logout menu is selected.");
               }

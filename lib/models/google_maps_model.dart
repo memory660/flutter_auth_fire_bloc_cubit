@@ -18,8 +18,6 @@ class GoogleMapsModel extends ChangeNotifier {
       speedAccuracy: 0);
 
   GoogleMapsModel() {
-    print(
-        "rrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr");
     fetchCurrentLocation().then((value) => () {
           currentPosition = value;
           print(value);
@@ -45,9 +43,6 @@ class GoogleMapsModel extends ChangeNotifier {
   deleteMarker(MarkerId markerId) {
     markerMap.remove(markerId);
     notifyListeners();
-    print('DELETE -------------(');
-    print(markerMap);
-    print('-------------)');
   }
 
   addPolyline(Polyline polyline) {
@@ -67,7 +62,7 @@ class GoogleMapsModel extends ChangeNotifier {
     try {
       currentPosition = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      print(currentPosition);
+
       currentLocation = ProjectMapModel(
           "current_location",
           currentPosition.latitude,
