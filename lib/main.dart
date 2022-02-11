@@ -9,8 +9,8 @@ import 'screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
-  UserDatabase userDatabase = UserDatabase();
-  userDatabase.initialize();
+  //UserDatabase userDatabase = UserDatabase();
+  //userDatabase.initialize();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
