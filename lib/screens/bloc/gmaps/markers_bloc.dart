@@ -46,13 +46,7 @@ class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
     Marker marker = event.marker;
     // ]
 
-    List<Marker> newList = List.from(state.markers)
-      ..add(marker)
-      ..add(marker)
-      ..add(marker)
-      ..add(marker)
-      ..add(marker)
-      ..add(marker);
+    List<Marker> newList = List.from(state.markers)..add(marker);
 
     emit(
       state.copyWith(
