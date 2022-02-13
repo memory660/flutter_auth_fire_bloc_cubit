@@ -118,7 +118,7 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             loginPageTitle(),
                             const SizedBox(height: 20),
                             loginPageSubtitle(),
@@ -130,15 +130,12 @@ class _LoginPageState extends State<LoginPage> {
                                   emailFormField(context),
                                   const SizedBox(height: 20),
                                   passwordFormField(context),
-                                  Align(
-                                    heightFactor: 2.0,
-                                    alignment: const Alignment(.95, 0),
-                                    child: forgotPassword(),
-                                  ),
-                                  Align(
-                                    heightFactor: 2.0,
-                                    alignment: const Alignment(.95, 0),
-                                    child: inscription(),
+                                  Row(
+                                    children: [
+                                      const SizedBox(height: 20),
+                                      forgotPassword(),
+                                      inscription(),
+                                    ],
                                   )
                                 ],
                               ),

@@ -54,6 +54,9 @@ class MapSampleChangeNotifierScreenState
     return Scaffold(
       body: Column(
         children: [
+          const SizedBox(
+            height: 20,
+          ),
           SearchTextField(
             controller: destinationController,
             onChanged: (text) {

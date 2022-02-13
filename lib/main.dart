@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'cubit/auth_cubit.dart';
 import 'screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_sizer/flutter_sizer.dart';
 
 Future<void> main() async {
   //UserDatabase userDatabase = UserDatabase();
@@ -27,15 +28,16 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        BlocProvider(create: (context) => AuthCubit()),
-        ChangeNotifierProvider<GoogleMapsModel>(
-            create: (context) => GoogleMapsModel()),
-      ],
-      child: const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: LoginPage(),
-      ),
-    );
+        providers: [
+          BlocProvider(create: (context) => AuthCubit()),
+          ChangeNotifierProvider<GoogleMapsModel>(
+              create: (context) => GoogleMapsModel()),
+        ],
+        child: FlutterSizer(builder: (context, orientation, deviceType) {
+          return const MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: LoginPage(),
+          );
+        }));
   }
 }

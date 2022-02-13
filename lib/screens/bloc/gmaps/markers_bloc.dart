@@ -7,7 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 
 class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
-  MarkersBloc() : super(const MarkersState()) {
+  MarkersBloc() : super(MarkersState()) {
     on<MarkersRequested>(_onMarkersRequested);
     on<MarkersUpdate>(_onMarkerUpdate);
     on<MarkersAdd>(_onMarkerAdd);
@@ -29,7 +29,7 @@ class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
     final markers = mapsModel.markerMap;
     List<Marker> markerlist = [];
     markers.forEach((k, v) => markerlist.add(v));
-    print(markerlist);
+
     // ]
 
     emit(state.copyWith(status: MarkersStatus.success, markers: markerlist));
@@ -41,12 +41,18 @@ class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
   ) async {
     emit(state.copyWith(status: MarkersStatus.loading));
     //final Marker marker = await _repo.addMarker(event.Marker);
-    print(event.marker);
+
     // remplace le repo [
     Marker marker = event.marker;
     // ]
 
-    List<Marker> newList = List.from(state.markers)..add(marker);
+    List<Marker> newList = List.from(state.markers)
+      ..add(marker)
+      ..add(marker)
+      ..add(marker)
+      ..add(marker)
+      ..add(marker)
+      ..add(marker);
 
     emit(
       state.copyWith(
