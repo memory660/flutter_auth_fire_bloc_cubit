@@ -113,7 +113,7 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   Container autocompleteSearchsection(ctx, predictionsList) {
     return Container(
         width: 100.0.w,
-        height: 300,
+        height: 100.0.h / 2,
         child: Builder(
             builder: (context) => Container(
                   decoration: BoxDecoration(
