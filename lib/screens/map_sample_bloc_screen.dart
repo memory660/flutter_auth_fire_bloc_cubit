@@ -1,22 +1,18 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_project4/map_api_key.dart';
 import 'package:flutter_project4/models/google_maps_model.dart';
 import 'package:flutter_project4/models/place_model.dart';
 import 'package:flutter_project4/models/project_maps_model.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_bloc.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_event.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_state.dart';
-import 'package:flutter_project4/screens/widgets/search_text_field.dart';
 import 'package:flutter_project4/screens/widgets/search_widget.dart';
-import 'package:flutter_project4/services/api_service.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 enum LocationStatus { SEARCHING, FOUND, ERROR }
 
@@ -92,7 +88,6 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   }
 
   initPlace(ctx, ProjectMapModel selectedPlace) {
-    print(selectedPlace);
     destinationLocation = selectedPlace;
     destinationController.text = selectedPlace.name;
 
