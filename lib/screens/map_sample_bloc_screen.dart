@@ -9,6 +9,7 @@ import 'package:flutter_project4/screens/bloc/gmaps/markers_bloc.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_event.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_state.dart';
 import 'package:flutter_project4/screens/widgets/search_text_field.dart';
+import 'package:flutter_project4/screens/widgets/search_widget.dart';
 import 'package:flutter_project4/services/api_service.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -67,7 +68,12 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                 builder: (context, state) {
                   return Column(
                     children: [
-                      searchSection(),
+                      SearchWidget(
+                        height: flxArr[2],
+                        onSelectedPlaceChanged: (ProjectMapModel val) {
+                          initPlace(context, val);
+                        },
+                      ),
                       Container(
                         width: MediaQuery.of(context).size.width,
                         height: 100.h / 2,
@@ -85,72 +91,20 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
     );
   }
 
-  Column searchSection() {
-    return Column(children: [
-      SearchTextField(
-        controller: destinationController,
-        onChanged: (text) {
-          findPlace(text);
-        },
-        onSubmitted: (text) {},
-      ),
-      ValueListenableBuilder<List<PlaceModel>>(
-        valueListenable: listenablePlaceModels,
-        builder: (context, predictionsList, child) {
-          return Visibility(
-            visible: predictionsList.isNotEmpty && addressVisibility,
-            child: autocompleteSearchsection(context, predictionsList),
-          );
-        },
-      )
-    ]);
-  }
+  initPlace(ctx, ProjectMapModel selectedPlace) {
+    print(selectedPlace);
+    destinationLocation = selectedPlace;
+    destinationController.text = selectedPlace.name;
 
-  Container autocompleteSearchsection(ctx, predictionsList) {
-    return Container(
-        width: MediaQuery.of(context).size.width,
-        height: (100.h / 2) - flxArr[1],
-        child: Builder(
-            builder: (context) => Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      backgroundBlendMode: BlendMode.darken),
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: ListView.separated(
-                    controller: ScrollController(),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        onTap: () {
-                          getPlaceAddressDetails(
-                              ctx, predictionsList[index].placeID);
-                          setState(() {
-                            addressVisibility = false;
-                            flxArr[0] = flxArr[2];
-                            setState(() {});
-                          });
-                        },
-                        title: Text(
-                          predictionsList[index].mainText,
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          predictionsList[index].secondaryText,
-                          style: const TextStyle(
-                              fontSize: 12, color: Colors.white),
-                        ),
-                        leading: const Icon(
-                          Icons.add_location,
-                          color: Colors.white,
-                        ),
-                      );
-                    },
-                    itemCount: predictionsList.length,
-                    separatorBuilder: (context, index) {
-                      return const Divider(height: 1, color: Colors.grey);
-                    },
-                  ),
-                )));
+    animateCameraNewLatLng(selectedPlace);
+    addMarker(selectedPlace);
+
+    Marker marker = Marker(
+        markerId: MarkerId(selectedPlace.placeID),
+        position: selectedPlace.latLong,
+        infoWindow: InfoWindow(title: selectedPlace.name));
+
+    BlocProvider.of<MarkersBloc>(ctx).add(MarkersAdd(marker: marker));
   }
 
   Visibility googleMapSection() {
@@ -236,27 +190,6 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
     controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
   }
 
-  // --------------------------------------------
-  getPlaceAddressDetails(ctx, String placeID) async {
-    final String placeAddressDetailsUrl =
-        "https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeID&key=$API_KEY";
-    final result = await ApiService.getRequest(placeAddressDetailsUrl);
-    final location = result["result"]["geometry"]["location"];
-    final ProjectMapModel selectedPlace = ProjectMapModel(
-        placeID, location["lat"], location["lng"], result["result"]["name"]);
-    destinationLocation = selectedPlace;
-    destinationController.text = selectedPlace.name;
-    animateCameraNewLatLng(selectedPlace);
-    addMarker(selectedPlace);
-
-    Marker marker = Marker(
-        markerId: MarkerId(selectedPlace.placeID),
-        position: selectedPlace.latLong,
-        infoWindow: InfoWindow(title: selectedPlace.name));
-
-    BlocProvider.of<MarkersBloc>(ctx).add(MarkersAdd(marker: marker));
-  }
-
   void animateCameraNewLatLng(ProjectMapModel work) {
     mapController.animateCamera(CameraUpdate.newLatLng(work.latLong));
   }
@@ -269,26 +202,5 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   removeMarker(ctx, Marker marker) {
     BlocProvider.of<MarkersBloc>(ctx)
         .add(MarkersDelete(markerId: marker.markerId));
-  }
-
-  void findPlace(String inputPlace) async {
-    if (inputPlace.length > 1) {
-      final String autoCompleteUrl =
-          "https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$inputPlace&key=$API_KEY&sessiontoken=1234567890&components=country:fr";
-      final result = await ApiService.getRequest(autoCompleteUrl);
-      listenablePlaceModels.value = (result["predictions"] as List)
-          .map((e) => PlaceModel.fromJson(e))
-          .toList();
-      if (listenablePlaceModels.value.isNotEmpty) {
-        addressVisibility = true;
-        flxArr[0] = flxArr[1];
-        setState(() {});
-
-        return;
-      }
-    }
-    addressVisibility = false;
-    flxArr[0] = flxArr[2];
-    setState(() {});
   }
 }
