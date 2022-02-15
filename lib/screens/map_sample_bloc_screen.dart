@@ -53,13 +53,12 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   ValueNotifier<LocationStatus> listenableStatus =
       ValueNotifier<LocationStatus>(LocationStatus.SEARCHING);
 
-  List flxArrInit = [1, 5, 4];
-  List flxArrOpen = [6, 0, 4];
-  List flxArr = [1, 5, 4];
+  List flxArr = [50, 50, (100.h / 2) - 50];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: BlocProvider<MarkersBloc>(
         create: (context) => MarkersBloc(),
         child: Builder(
@@ -68,18 +67,15 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                 builder: (context, state) {
                   return Column(
                     children: [
-                      Expanded(
-                        flex: flxArr[0],
-                        child: Container(child: searchSection()),
-                      ),
-                      Expanded(
-                        flex: flxArr[1],
+                      searchSection(),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 100.h / 2,
                         child: Container(
                           child: googleMapSection(),
                         ),
                       ),
                       Expanded(
-                        flex: flxArr[2],
                         child: markersSectionBloc(context, state),
                       ),
                     ],
@@ -112,8 +108,8 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
 
   Container autocompleteSearchsection(ctx, predictionsList) {
     return Container(
-        width: 100.0.w,
-        height: 100.0.h / 2,
+        width: MediaQuery.of(context).size.width,
+        height: (100.h / 2) - flxArr[1],
         child: Builder(
             builder: (context) => Container(
                   decoration: BoxDecoration(
@@ -129,7 +125,7 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                               ctx, predictionsList[index].placeID);
                           setState(() {
                             addressVisibility = false;
-                            flxArr = flxArrInit;
+                            flxArr[0] = flxArr[2];
                             setState(() {});
                           });
                         },
@@ -159,42 +155,38 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
 
   Visibility googleMapSection() {
     return Visibility(
-        visible: !addressVisibility,
-        maintainState: true,
-        child: Container(
-          height: 100.0.h,
-          width: 100.0.w,
-          child: Consumer<GoogleMapsModel>(
-            builder: (context, mapModel, child) {
-              return GoogleMap(
-                zoomControlsEnabled: false,
-                myLocationEnabled: true,
-                mapType: MapType.normal,
-                polylines: mapModel.polylineSet,
-                initialCameraPosition: CameraPosition(
-                    target: LatLng(44.85748824841539, -0.509009242633116),
-                    zoom: 15),
-                onMapCreated: (map) {
-                  mapController = map;
-                },
-                markers: mapModel.markerMap.isNotEmpty
-                    ? Set<Marker>.of(mapModel.markerMap.values)
-                    : Set<Marker>(),
-                onTap: (LatLng latLng) {
-                  print(latLng);
-                },
-              );
+      visible: !addressVisibility,
+      maintainState: true,
+      child: Consumer<GoogleMapsModel>(
+        builder: (context, mapModel, child) {
+          return GoogleMap(
+            zoomControlsEnabled: false,
+            myLocationEnabled: true,
+            mapType: MapType.normal,
+            polylines: mapModel.polylineSet,
+            initialCameraPosition: CameraPosition(
+                target: LatLng(44.85748824841539, -0.509009242633116),
+                zoom: 15),
+            onMapCreated: (map) {
+              mapController = map;
             },
-          ),
-        ));
+            markers: mapModel.markerMap.isNotEmpty
+                ? Set<Marker>.of(mapModel.markerMap.values)
+                : Set<Marker>(),
+            onTap: (LatLng latLng) {
+              print(latLng);
+            },
+          );
+        },
+      ),
+    );
   }
 
   Container markersSectionBloc(ctx, state) {
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10, left: 5, right: 5),
-        width: 100.0.w,
-        height: 100.0.h,
         child: ListView.builder(
+            shrinkWrap: true,
             itemCount: state.markers.length,
             itemBuilder: (BuildContext context, int index) {
               final list = state.markers.toList(growable: true);
@@ -289,14 +281,14 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
           .toList();
       if (listenablePlaceModels.value.isNotEmpty) {
         addressVisibility = true;
-        flxArr = flxArrOpen;
+        flxArr[0] = flxArr[1];
         setState(() {});
 
         return;
       }
     }
     addressVisibility = false;
-    flxArr = flxArrInit;
+    flxArr[0] = flxArr[2];
     setState(() {});
   }
 }
