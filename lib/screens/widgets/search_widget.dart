@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_project4/map_api_key.dart';
 import 'package:flutter_project4/models/place_model.dart';
 import 'package:flutter_project4/models/project_maps_model.dart';
-import 'package:flutter_project4/screens/functions/search_text_field.dart';
+import 'package:flutter_project4/screens/widgets/search_text_field.dart';
 import 'package:flutter_project4/services/api_service.dart';
 
 class SearchWidget extends StatefulWidget {
