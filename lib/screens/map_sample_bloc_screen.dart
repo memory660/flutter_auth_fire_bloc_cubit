@@ -33,26 +33,13 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
     target: LatLng(37.43296265331129, -122.08832357078792),
   );
 
-  // -----------------------------------------
-  // -----------------------------------------
   final TextEditingController destinationController = TextEditingController();
-  ValueNotifier<List<PlaceModel>> listenablePlaceModels =
-      ValueNotifier<List<PlaceModel>>([]);
   late ProjectMapModel destinationLocation;
   late GoogleMapController mapController;
-
   bool addressVisibility = false;
-
   late GoogleMapsModel markerModel;
   MarkerId? markerId;
-
-  late Position currentPosition;
-  final TextEditingController locationController = TextEditingController();
-  ValueNotifier<LocationStatus> listenableStatus =
-      ValueNotifier<LocationStatus>(LocationStatus.SEARCHING);
-
   List flxArr = [50, 50, (100.h / 2) - 50];
-//
 
   @override
   Widget build(BuildContext context) {
