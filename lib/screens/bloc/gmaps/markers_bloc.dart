@@ -29,7 +29,6 @@ class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
     final markers = mapsModel.markerMap;
     List<Marker> markerlist = [];
     markers.forEach((k, v) => markerlist.add(v));
-
     // ]
 
     emit(state.copyWith(status: MarkersStatus.success, markers: markerlist));
@@ -47,7 +46,6 @@ class MarkersBloc extends Bloc<MarkersEvent, MarkersState> {
     // ]
 
     List<Marker> newList = List.from(state.markers)..add(marker);
-
     emit(
       state.copyWith(
         status: MarkersStatus.success,
