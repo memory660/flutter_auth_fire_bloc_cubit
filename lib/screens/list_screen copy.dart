@@ -16,13 +16,13 @@ class ListScreen extends StatefulWidget {
 }
 
 class _ListScreenState extends State<ListScreen> {
-  //late User currentUser;
+  late User currentUser;
   final UserDatabase userDatabase = UserDatabase();
 
   @override
   void initState() {
     final authCubit = BlocProvider.of<AuthCubit>(context);
-    //currentUser = authCubit.state.user!;
+    currentUser = authCubit.state.user!;
     super.initState();
   }
 

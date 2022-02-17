@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project4/constant/constant.dart';
 import 'package:flutter_project4/database/user_database.dart';
 import 'package:flutter_project4/screens/list_screen.dart';
+import 'package:flutter_project4/screens/widgets/appbar_widget.dart';
 import 'package:flutter_project4/screens/widgets/common.dart';
 import 'package:flutter_project4/ui/animation_button.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -43,60 +44,58 @@ class _EditScreenState extends State<EditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Édition',
-        home: Scaffold(
-            backgroundColor: const Color(0xFFfefefe),
-            appBar: AppBar(title: const Text('Édition')),
-            body: StreamBuilder<QuerySnapshot>(
-                stream: userDatabase.readData(),
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+    return Scaffold(
+        backgroundColor: const Color(0xFFfefefe),
+        appBar: const AppbarWidget(height: 50, title: 'users - edit'),
+        body: StreamBuilder<QuerySnapshot>(
+            stream: userDatabase.readData(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      userItemCard(widget.user, widget.index),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          userItemCard(widget.user, widget.index),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              SizedBox(
-                                width: 200,
-                                child: titleFormField(context),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              SizedBox(
-                                width: 200,
-                                child: firstNameFormField(context),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              SizedBox(
-                                width: 200,
-                                child: lastNameFormField(context),
-                              ),
-                            ],
+                          SizedBox(
+                            width: 200,
+                            child: titleFormField(context),
                           ),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              cancelButton(context),
-                              Container(
-                                width: 100,
-                              ),
-                              loginButton(context, widget.user),
-                            ],
-                          )
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: firstNameFormField(context),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            width: 200,
+                            child: lastNameFormField(context),
+                          ),
                         ],
-                      ));
-                })));
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          cancelButton(context),
+                          Container(
+                            width: 100,
+                          ),
+                          loginButton(context, widget.user),
+                        ],
+                      )
+                    ],
+                  ));
+            }));
   }
 
   TextFormField titleFormField(BuildContext context) {
@@ -207,8 +206,8 @@ class _EditScreenState extends State<EditScreen> {
   ElevatedButton cancelButton(BuildContext context) {
     return ElevatedButton(
         onPressed: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const ListScreen()));
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (context) => ListScreen()));
         },
         child: Text(editCancelLabel));
   }

@@ -3,11 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_project4/screens/list_screen.dart';
-import 'package:flutter_project4/screens/map_sample_changenotifier_screen.dart';
-
-import 'package:flutter_project4/screens/map_sample_bloc_screen.dart';
-import 'package:flutter_project4/screens/map_sample_screen.dart';
 import 'package:flutter_project4/screens/sign_up_screen.dart';
+import 'package:flutter_project4/screens/widgets/appbar_widget.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../constant/constant.dart';
 import '../cubit/auth_cubit.dart';
@@ -49,41 +46,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Home'),
-          actions: [
-            PopupMenuButton(itemBuilder: (context) {
-              return [
-                const PopupMenuItem<int>(
-                  value: 0,
-                  child: Text("carte 1"),
-                ),
-                const PopupMenuItem<int>(
-                  value: 1,
-                  child: Text("carte 2 - bloc"),
-                ),
-                const PopupMenuItem<int>(
-                  value: 2,
-                  child: Text("carte 3 - ChangeNotifier"),
-                ),
-              ];
-            }, onSelected: (value) {
-              if (value == 0) {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => MapSampleScreen()));
-              } else if (value == 1) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const MapSampleBlocScreen()));
-              } else if (value == 2) {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) =>
-                        const MapSampleChangeNotifierScreen()));
-              } else if (value == 2) {
-                print("Logout menu is selected.");
-              }
-            }),
-          ],
-        ),
+        appBar: const AppbarWidget(height: 50, title: 'connexion'),
         backgroundColor: kBackgroundColor,
         body: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) async {
@@ -162,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
     return PageRouteBuilder(
       opaque: true,
       pageBuilder: (BuildContext context, _, __) {
-        return const ListScreen();
+        return ListScreen();
       },
       transitionDuration: const Duration(milliseconds: 700),
       reverseTransitionDuration: const Duration(milliseconds: 700),

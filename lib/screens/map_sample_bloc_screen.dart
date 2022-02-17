@@ -7,6 +7,7 @@ import 'package:flutter_project4/models/project_maps_model.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_bloc.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_event.dart';
 import 'package:flutter_project4/screens/bloc/gmaps/markers_state.dart';
+import 'package:flutter_project4/screens/widgets/appbar_widget.dart';
 import 'package:flutter_project4/screens/widgets/markers_widget.dart';
 import 'package:flutter_project4/screens/widgets/search_widget.dart';
 import 'package:geocoding/geocoding.dart';
@@ -36,14 +37,15 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   final TextEditingController destinationController = TextEditingController();
   late ProjectMapModel destinationLocation;
   late GoogleMapController mapController;
-  bool addressVisibility = false;
   late GoogleMapsModel markerModel;
+  bool autocompleteVisibility = false;
   MarkerId? markerId;
   List flxArr = [50, 50, (100.h / 2) - 50];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: const AppbarWidget(height: 50, title: 'bloc maps'),
         resizeToAvoidBottomInset: false,
         body: BlocProvider<MarkersBloc>(
             create: (context) => MarkersBloc(),
@@ -57,6 +59,10 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                             height: flxArr[2],
                             onSelectedPlaceChanged: (ProjectMapModel val) {
                               initPlace(context, val);
+                            },
+                            onAutocompleteVisibility: (bool val) {
+                              autocompleteVisibility = val;
+                              setState(() {});
                             },
                           ),
                           Container(
@@ -102,7 +108,7 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
 
   Visibility googleMapSection() {
     return Visibility(
-      visible: !addressVisibility,
+      visible: !autocompleteVisibility,
       maintainState: true,
       child: Consumer<GoogleMapsModel>(
         builder: (context, mapModel, child) {

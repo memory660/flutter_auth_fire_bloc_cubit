@@ -4,6 +4,7 @@ import 'package:flutter_project4/map_api_key.dart';
 import 'package:flutter_project4/models/google_maps_model.dart';
 import 'package:flutter_project4/models/place_model.dart';
 import 'package:flutter_project4/models/project_maps_model.dart';
+import 'package:flutter_project4/screens/widgets/appbar_widget.dart';
 import 'package:flutter_project4/screens/widgets/search_text_field.dart';
 import 'package:flutter_project4/services/api_service.dart';
 import 'package:geocoding/geocoding.dart';
@@ -39,7 +40,7 @@ class MapSampleChangeNotifierScreenState
   late ProjectMapModel destinationLocation;
   late GoogleMapController mapController;
 
-  bool addressVisibility = false;
+  bool autocompleteVisibility = false;
 
   late GoogleMapsModel markerModel;
   MarkerId? markerId;
@@ -52,6 +53,7 @@ class MapSampleChangeNotifierScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const AppbarWidget(height: 50, title: 'notifier maps'),
       body: Column(
         children: [
           const SizedBox(
@@ -68,7 +70,7 @@ class MapSampleChangeNotifierScreenState
             valueListenable: listenablePlaceModels,
             builder: (context, predictionsList, child) {
               return Visibility(
-                visible: predictionsList.isNotEmpty && addressVisibility,
+                visible: predictionsList.isNotEmpty && autocompleteVisibility,
                 child: autocompleteSearchsection(predictionsList),
               );
             },
@@ -122,7 +124,7 @@ class MapSampleChangeNotifierScreenState
           .map((e) => PlaceModel.fromJson(e))
           .toList();
       if (listenablePlaceModels.value.isNotEmpty) {
-        addressVisibility = true;
+        autocompleteVisibility = true;
       }
     }
   }
@@ -142,7 +144,7 @@ class MapSampleChangeNotifierScreenState
                     onTap: () {
                       getPlaceAddressDetails(predictionsList[index].placeID);
                       setState(() {
-                        addressVisibility = false;
+                        autocompleteVisibility = false;
                       });
                     },
                     title: Text(

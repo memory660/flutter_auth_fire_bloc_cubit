@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_project4/screens/widgets/appbar_widget.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapSampleScreen extends StatefulWidget {
@@ -23,7 +24,8 @@ class MapSampleScreenState extends State<MapSampleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
+    return Scaffold(
+      appBar: const AppbarWidget(height: 50, title: 'maps'),
       body: GoogleMap(
         mapType: MapType.hybrid,
         initialCameraPosition: _kGooglePlex,

@@ -6,11 +6,16 @@ import 'package:flutter_project4/screens/widgets/search_text_field.dart';
 import 'package:flutter_project4/services/api_service.dart';
 
 class SearchWidget extends StatefulWidget {
-  SearchWidget(
-      {Key? key, required this.height, required this.onSelectedPlaceChanged})
-      : super(key: key);
+  SearchWidget({
+    Key? key,
+    required this.height,
+    required this.onSelectedPlaceChanged,
+    required this.onAutocompleteVisibility,
+  }) : super(key: key);
   final double height;
   late Function(ProjectMapModel) onSelectedPlaceChanged;
+  late Function(bool) onAutocompleteVisibility;
+  bool autocompleteVisibility = false;
 
   @override
   State<SearchWidget> createState() => _SearchWidgetState();
@@ -19,17 +24,19 @@ class SearchWidget extends StatefulWidget {
 class _SearchWidgetState extends State<SearchWidget> {
   late double _height;
   late Function(ProjectMapModel) _onSelectedPlaceChanged;
+  late Function(bool) _onAutocompleteVisibility;
   //
   TextEditingController destinationController = TextEditingController();
   ValueNotifier<List<PlaceModel>> listenablePlaceModels =
       ValueNotifier<List<PlaceModel>>([]);
-  bool addressVisibility = false;
+  bool autocompleteVisibility = false;
   late List flxArr;
 
   @override
   void initState() {
     super.initState();
     _onSelectedPlaceChanged = widget.onSelectedPlaceChanged;
+    _onAutocompleteVisibility = widget.onAutocompleteVisibility;
     _height = widget.height;
     flxArr = [50, 50, _height];
   }
@@ -48,7 +55,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         valueListenable: listenablePlaceModels,
         builder: (context, predictionsList, child) {
           return Visibility(
-            visible: predictionsList.isNotEmpty && addressVisibility,
+            visible: predictionsList.isNotEmpty,
             child: autocompleteSearchsection(context, predictionsList),
           );
         },
@@ -65,55 +72,59 @@ class _SearchWidgetState extends State<SearchWidget> {
           .map((e) => PlaceModel.fromJson(e))
           .toList();
       if (listenablePlaceModels.value.isNotEmpty) {
-        addressVisibility = true;
+        _onAutocompleteVisibility(true);
+        autocompleteVisibility = true;
         flxArr[0] = flxArr[1];
         return;
       }
     }
-    addressVisibility = false;
+    _onAutocompleteVisibility(false);
+    autocompleteVisibility = false;
     flxArr[0] = flxArr[2];
   }
 
-  Container autocompleteSearchsection(ctx, predictionsList) {
-    return Container(
-        width: MediaQuery.of(ctx).size.width,
-        height: flxArr[2],
-        child: Builder(
-            builder: (context) => Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      backgroundBlendMode: BlendMode.darken),
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: ListView.separated(
-                    controller: ScrollController(),
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        onTap: () {
-                          getPlaceAddressDetails(
-                              ctx, predictionsList[index].placeID);
+  Visibility autocompleteSearchsection(ctx, predictionsList) {
+    return Visibility(
+        visible: autocompleteVisibility,
+        child: Container(
+            width: MediaQuery.of(ctx).size.width,
+            height: flxArr[2],
+            child: Builder(
+                builder: (context) => Container(
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          backgroundBlendMode: BlendMode.darken),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: ListView.separated(
+                        controller: ScrollController(),
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            onTap: () {
+                              getPlaceAddressDetails(
+                                  ctx, predictionsList[index].placeID);
+                            },
+                            title: Text(
+                              predictionsList[index].mainText,
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white),
+                            ),
+                            subtitle: Text(
+                              predictionsList[index].secondaryText,
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.white),
+                            ),
+                            leading: const Icon(
+                              Icons.add_location,
+                              color: Colors.white,
+                            ),
+                          );
                         },
-                        title: Text(
-                          predictionsList[index].mainText,
-                          style: const TextStyle(
-                              fontSize: 14, color: Colors.white),
-                        ),
-                        subtitle: Text(
-                          predictionsList[index].secondaryText,
-                          style: const TextStyle(
-                              fontSize: 12, color: Colors.white),
-                        ),
-                        leading: const Icon(
-                          Icons.add_location,
-                          color: Colors.white,
-                        ),
-                      );
-                    },
-                    itemCount: predictionsList.length,
-                    separatorBuilder: (context, index) {
-                      return const Divider(height: 1, color: Colors.grey);
-                    },
-                  ),
-                )));
+                        itemCount: predictionsList.length,
+                        separatorBuilder: (context, index) {
+                          return const Divider(height: 1, color: Colors.grey);
+                        },
+                      ),
+                    ))));
   }
 
   getPlaceAddressDetails(ctx, String placeID) async {
@@ -123,8 +134,9 @@ class _SearchWidgetState extends State<SearchWidget> {
     final location = result["result"]["geometry"]["location"];
     final ProjectMapModel selectedPlace = ProjectMapModel(
         placeID, location["lat"], location["lng"], result["result"]["name"]);
-    addressVisibility = false;
     flxArr[0] = flxArr[2];
+    _onAutocompleteVisibility(false);
+    autocompleteVisibility = false;
     _onSelectedPlaceChanged(selectedPlace);
     setState(() {});
   }
