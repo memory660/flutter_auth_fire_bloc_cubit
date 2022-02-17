@@ -38,7 +38,7 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   late GoogleMapsModel markerModel;
   bool autocompleteVisibility = false;
   MarkerId? markerId;
-  List flxArr = [50, 50, (100.h / 2) - 50];
+  List flxArr = [50, 50, (100.h / 2) - 62];
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +53,9 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                     builder: (context, state) {
                       return Column(
                         children: [
+                          const SizedBox(
+                            height: 4,
+                          ),
                           SearchWidget(
                             height: flxArr[2],
                             onSelectedPlaceChanged: (ProjectMapModel val) {
@@ -62,6 +65,9 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                               autocompleteVisibility = val;
                               setState(() {});
                             },
+                          ),
+                          const SizedBox(
+                            height: 8,
                           ),
                           Visibility(
                             visible: !autocompleteVisibility,
