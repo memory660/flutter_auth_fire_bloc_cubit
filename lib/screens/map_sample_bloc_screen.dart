@@ -29,11 +29,9 @@ class MapSampleBlocScreen extends StatefulWidget {
 
 class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
   Completer<GoogleMapController> _controller = Completer();
-
   static final CameraPosition _kLake = CameraPosition(
     target: LatLng(37.43296265331129, -122.08832357078792),
   );
-
   final TextEditingController destinationController = TextEditingController();
   late ProjectMapModel destinationLocation;
   late GoogleMapController mapController;
@@ -65,10 +63,12 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                               setState(() {});
                             },
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 100.h / 2,
+                          Visibility(
+                            visible: !autocompleteVisibility,
+                            maintainState: true,
                             child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              height: 100.h / 2,
                               child: googleMapSection(),
                             ),
                           ),
@@ -106,32 +106,27 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
         .add(MarkersAdd(marker: marker));
   }
 
-  Visibility googleMapSection() {
-    return Visibility(
-      visible: !autocompleteVisibility,
-      maintainState: true,
-      child: Consumer<GoogleMapsModel>(
-        builder: (context, mapModel, child) {
-          return GoogleMap(
-            zoomControlsEnabled: false,
-            myLocationEnabled: true,
-            mapType: MapType.normal,
-            polylines: mapModel.polylineSet,
-            initialCameraPosition: CameraPosition(
-                target: LatLng(44.85748824841539, -0.509009242633116),
-                zoom: 15),
-            onMapCreated: (map) {
-              mapController = map;
-            },
-            markers: mapModel.markerMap.isNotEmpty
-                ? Set<Marker>.of(mapModel.markerMap.values)
-                : Set<Marker>(),
-            onTap: (LatLng latLng) {
-              print(latLng);
-            },
-          );
-        },
-      ),
+  Consumer googleMapSection() {
+    return Consumer<GoogleMapsModel>(
+      builder: (context, mapModel, child) {
+        return GoogleMap(
+          zoomControlsEnabled: false,
+          myLocationEnabled: true,
+          mapType: MapType.normal,
+          polylines: mapModel.polylineSet,
+          initialCameraPosition: CameraPosition(
+              target: LatLng(44.85748824841539, -0.509009242633116), zoom: 15),
+          onMapCreated: (map) {
+            mapController = map;
+          },
+          markers: mapModel.markerMap.isNotEmpty
+              ? Set<Marker>.of(mapModel.markerMap.values)
+              : Set<Marker>(),
+          onTap: (LatLng latLng) {
+            print(latLng);
+          },
+        );
+      },
     );
   }
 

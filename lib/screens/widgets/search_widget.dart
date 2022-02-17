@@ -30,7 +30,7 @@ class _SearchWidgetState extends State<SearchWidget> {
   ValueNotifier<List<PlaceModel>> listenablePlaceModels =
       ValueNotifier<List<PlaceModel>>([]);
   bool autocompleteVisibility = false;
-  late List flxArr;
+  //late List flxArr;
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     _onSelectedPlaceChanged = widget.onSelectedPlaceChanged;
     _onAutocompleteVisibility = widget.onAutocompleteVisibility;
     _height = widget.height;
-    flxArr = [50, 50, _height];
+    //flxArr = [50, 50, _height];
   }
 
   @override
@@ -74,13 +74,13 @@ class _SearchWidgetState extends State<SearchWidget> {
       if (listenablePlaceModels.value.isNotEmpty) {
         _onAutocompleteVisibility(true);
         autocompleteVisibility = true;
-        flxArr[0] = flxArr[1];
+        //  flxArr[0] = flxArr[1];
         return;
       }
     }
     _onAutocompleteVisibility(false);
     autocompleteVisibility = false;
-    flxArr[0] = flxArr[2];
+    //flxArr[0] = flxArr[2];
   }
 
   Visibility autocompleteSearchsection(ctx, predictionsList) {
@@ -88,7 +88,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         visible: autocompleteVisibility,
         child: Container(
             width: MediaQuery.of(ctx).size.width,
-            height: flxArr[2],
+            height: _height, // flxArr[2],
             child: Builder(
                 builder: (context) => Container(
                       decoration: BoxDecoration(
@@ -134,7 +134,7 @@ class _SearchWidgetState extends State<SearchWidget> {
     final location = result["result"]["geometry"]["location"];
     final ProjectMapModel selectedPlace = ProjectMapModel(
         placeID, location["lat"], location["lng"], result["result"]["name"]);
-    flxArr[0] = flxArr[2];
+//    flxArr[0] = flxArr[2];
     _onAutocompleteVisibility(false);
     autocompleteVisibility = false;
     _onSelectedPlaceChanged(selectedPlace);
