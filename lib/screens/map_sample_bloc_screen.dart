@@ -48,35 +48,36 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                 builder: (context) => BlocBuilder<MarkersBloc, MarkersState>(
                     buildWhen: (previous, current) => current.status.isSuccess,
                     builder: (context, state) {
-                      return Container(
-                        child:
-                            OrientationBuilder(builder: (context, orientation) {
-                          print(orientation);
-                          if (orientation == Orientation.portrait) {
-                            return Container(
-                              // Widget for Portrait
+                      return Padding(
+                          padding: EdgeInsets.all(2.0),
+                          child: Container(
+                            child: OrientationBuilder(
+                                builder: (context, orientation) {
+                              if (orientation == Orientation.portrait) {
+                                return Container(
+                                  // Widget for Portrait
 
-                              child: Content(
-                                axe: Axis.vertical,
-                                width: 1,
-                                heightAuto: 1,
-                                orientation: orientation,
-                              ),
-                            );
-                          } else {
-                            return Container(
-                              // Widget for Landscape
+                                  child: Content(
+                                    axe: Axis.vertical,
+                                    width: 1,
+                                    heightAuto: 1,
+                                    orientation: orientation,
+                                  ),
+                                );
+                              } else {
+                                return Container(
+                                  // Widget for Landscape
 
-                              child: Content(
-                                axe: Axis.horizontal,
-                                width: 1,
-                                heightAuto: 1,
-                                orientation: orientation,
-                              ),
-                            );
-                          }
-                        }),
-                      );
+                                  child: Content(
+                                    axe: Axis.horizontal,
+                                    width: 1,
+                                    heightAuto: 1,
+                                    orientation: orientation,
+                                  ),
+                                );
+                              }
+                            }),
+                          ));
                     }))));
   }
 
@@ -124,15 +125,15 @@ class _ContentState extends State<Content> {
     double w = 0;
     double h = 0;
     double maph = 0;
-    print(widget.axe);
+
     if (widget.axe == Axis.vertical) {
-      w = 100.w;
-      h = 100.h / 2;
-      maph = 50;
+      w = 100.w - 4;
+      h = 100.h / 2 - 27;
+      maph = 62;
     } else {
-      w = 100.w / 2;
-      h = 100.h;
-      maph = 100;
+      w = 100.w / 2 - 4;
+      h = 100.h - 27;
+      maph = 112;
     }
     return Flex(direction: widget.axe, children: <Widget>[
       Container(
@@ -146,6 +147,9 @@ class _ContentState extends State<Content> {
             },
             onSubmitted: (text) {},
           ),
+          SizedBox(
+            height: 8,
+          ),
           ValueListenableBuilder<List<PlaceModel>>(
             valueListenable: listenablePlaceModels,
             builder: (context, predictionsList, child) {
@@ -153,7 +157,7 @@ class _ContentState extends State<Content> {
                   visible: autocompleteVisibility,
                   child: Container(
                     width: w,
-                    height: h - 80,
+                    height: h - 110,
                     child: autocompleteSearchsection(context, predictionsList),
                   ));
             },
