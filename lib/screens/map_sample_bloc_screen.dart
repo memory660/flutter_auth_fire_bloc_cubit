@@ -12,13 +12,13 @@ import 'package:flutter_project4/screens/bloc/gmaps/markers_state.dart';
 import 'package:flutter_project4/screens/widgets/appbar_widget.dart';
 import 'package:flutter_project4/screens/widgets/markers_widget.dart';
 import 'package:flutter_project4/screens/widgets/search_text_field.dart';
-
 import 'package:flutter_project4/services/api_service.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 enum LocationStatus { SEARCHING, FOUND, ERROR }
 
@@ -53,10 +53,10 @@ class MapSampleBlocScreenState extends State<MapSampleBlocScreen> {
                           child: Container(
                             child: OrientationBuilder(
                                 builder: (context, orientation) {
-                              if (orientation == Orientation.portrait) {
+                              if (orientation == Orientation.portrait ||
+                                  MediaQuery.of(context).size.height > 600) {
                                 return Container(
                                   // Widget for Portrait
-
                                   child: Content(
                                     axe: Axis.vertical,
                                     width: 1,
@@ -139,38 +139,41 @@ class _ContentState extends State<Content> {
       Container(
         width: w,
         height: h,
-        child: Column(children: [
-          SearchTextField(
-            controller: destinationController,
-            onChanged: (text) {
-              findPlace(text);
-            },
-            onSubmitted: (text) {},
-          ),
-          SizedBox(
-            height: 8,
-          ),
-          ValueListenableBuilder<List<PlaceModel>>(
-            valueListenable: listenablePlaceModels,
-            builder: (context, predictionsList, child) {
-              return Visibility(
-                  visible: autocompleteVisibility,
-                  child: Container(
-                    width: w,
-                    height: h - 110,
-                    child: autocompleteSearchsection(context, predictionsList),
-                  ));
-            },
-          ),
-          Visibility(
-              visible: !autocompleteVisibility,
-              maintainState: true,
-              child: Container(
-                width: w,
-                height: h - maph,
-                child: googleMapSection(widget.orientation),
-              )),
-        ]),
+        child: SingleChildScrollView(
+          child: Column(children: [
+            SearchTextField(
+              controller: destinationController,
+              onChanged: (text) {
+                findPlace(text);
+              },
+              onSubmitted: (text) {},
+            ),
+            SizedBox(
+              height: 8,
+            ),
+            ValueListenableBuilder<List<PlaceModel>>(
+              valueListenable: listenablePlaceModels,
+              builder: (context, predictionsList, child) {
+                return Visibility(
+                    visible: autocompleteVisibility,
+                    child: Container(
+                      width: w,
+                      height: h - 110,
+                      child:
+                          autocompleteSearchsection(context, predictionsList),
+                    ));
+              },
+            ),
+            Visibility(
+                visible: !autocompleteVisibility,
+                maintainState: true,
+                child: Container(
+                  width: w,
+                  height: h - maph,
+                  child: googleMapSection(widget.orientation),
+                )),
+          ]),
+        ),
       ),
       Container(
         width: w,

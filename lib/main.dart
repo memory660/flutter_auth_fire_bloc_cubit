@@ -13,6 +13,7 @@ import 'cubit/auth_cubit.dart';
 import 'screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_sizer/flutter_sizer.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 Future<void> main() async {
   //UserDatabase userDatabase = UserDatabase();
@@ -40,6 +41,19 @@ class _MyAppState extends State<MyApp> {
         ],
         child: FlutterSizer(builder: (context, orientation, deviceType) {
           return MaterialApp(
+            builder: (context, widget) => ResponsiveWrapper.builder(
+              ClampingScrollWrapper.builder(context, widget!),
+              maxWidth: 1200,
+              minWidth: 480,
+              defaultScale: false,
+              breakpoints: [
+                const ResponsiveBreakpoint.resize(350, name: MOBILE),
+                const ResponsiveBreakpoint.autoScale(600, name: TABLET),
+                const ResponsiveBreakpoint.resize(800, name: DESKTOP),
+                const ResponsiveBreakpoint.autoScale(1700, name: "XL"),
+              ],
+            ),
+            title: 'Flutter Responsive Framework',
             debugShowCheckedModeBanner: false,
             initialRoute: '/',
             routes: {
