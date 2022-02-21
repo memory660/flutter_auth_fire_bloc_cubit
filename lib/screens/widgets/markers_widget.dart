@@ -32,7 +32,6 @@ class _MarkersWidgetState extends State<MarkersWidget> {
       builder: (context) => BlocBuilder<MarkersBloc, MarkersState>(
           buildWhen: (previous, current) => current.status.isSuccess,
           builder: (context, state) {
-            print(state.markers.length);
             return Container(
                 margin: const EdgeInsets.only(
                     top: 10, bottom: 10, left: 5, right: 5),
